@@ -166,15 +166,17 @@ export default class ApiMain extends Component {
     this.setState({loading: true});
     fetch(FetchConstants.ListURL+
       "?schAnnnum="+this.state.schBidNum+
-      "&schAnnname="+this.state.schBidName+
       "&schSdate="+this.state.schBidSDate+
-      "&schEdate="+this.state.schBidEDate)
+      "&schEdate="+this.state.schBidEDate+
+      "&schAnnname="+this.state.schBidName,{
+        method:'GET',
+      })
       .then((response) => response.json())
       .then((responseData) => {
-        if(responseData==null){
+        if(responseData==''){
           Alert.alert(
             '오류',
-            'responseData가 null입니다.',
+            '해당 검색조건에 맞는 데이터가 없습니다.',
             [
               {text:'확인'},
             ]
@@ -182,42 +184,53 @@ export default class ApiMain extends Component {
           this.setState({loading: false});
         }else{
         console.log(responseData);
-        if(responseData[0]==null){}else{
+        if(responseData==null){
+            Alert.alert(
+              '오류',
+              '조건에 맞는 데이터가 없습니다.',
+              [
+                {text: '확인'},
+              ]
+            )
+        }else{
           this.setState({
-            bidNum:responseData[0].annnum,
-            bidName:responseData[0].annname,
-            bidDate:responseData[0].anndate,
-            bidUrl:responseData[0].url,
-            bidMemo:responseData[0].memo,
+            // bidNum:responseData[0].annnum,
+            // bidName:responseData[0].annname,
+            // bidDate:responseData[0].anndate,
+            // bidUrl:responseData[0].url,
+            // bidMemo:responseData[0].memo,
             loading: false
           });
+          Actions.fetchedList({
+            FetchedData: responseData
+          })
         }
-
-        if(this.state.bidName == null){
-          Alert.alert(
-            '오류',
-            '공고 이름이 없습니다.',
-            [
-              {text: '확인'},
-            ]
-          )
-          this.setState({loading: false});
-        }else if(this.state.bidNum == null){
-          Alert.alert(
-            '오류',
-            '공고 번호가 없습니다.',
-            [
-              {text: '확인'},
-            ]
-          )
-          this.setState({loading: false});
-        }else{
-          // Actions.detailInfo({
-          //   name:this.state.pname,
-          //   height: this.state.pheight,
-          //   mass: this.state.pmass})
-          this.setState({loading: false});
-        };
+        //
+        // if(this.state.bidName == null){
+        //   Alert.alert(
+        //     '오류',
+        //     '공고 이름이 없습니다.',
+        //     [
+        //       {text: '확인'},
+        //     ]
+        //   )
+        //   this.setState({loading: false});
+        // }else if(this.state.bidNum == null){
+        //   Alert.alert(
+        //     '오류',
+        //     '공고 번호가 없습니다.',
+        //     [
+        //       {text: '확인'},
+        //     ]
+        //   )
+        //   this.setState({loading: false});
+        // }else{
+        //   // Actions.detailInfo({
+        //   //   name:this.state.pname,
+        //   //   height: this.state.pheight,
+        //   //   mass: this.state.pmass})
+        //   this.setState({loading: false});
+        // };
           //detailView Required
         }
       })
@@ -267,7 +280,7 @@ export default class ApiMain extends Component {
 
                   <View style={{alignItems: 'center'}}>
                       <Text style={{fontSize:15 ,color:'#9e9e9e'}}>공고 일자</Text>
-                      <TextInput style={{width:200,
+                      <TextInput style={{width:110,
                         height: 40,
                         color:'#7e7e7e',
                         alignItems:'center'
@@ -280,7 +293,7 @@ export default class ApiMain extends Component {
 
                   <View style={{alignItems: 'center'}}>
                       <Text style={{fontSize:15 ,color:'#9e9e9e'}}>공고 일자</Text>
-                      <TextInput style={{width:200,
+                      <TextInput style={{width:110,
                         height: 40,
                         color:'#7e7e7e',
                         alignItems:'center'
@@ -309,41 +322,8 @@ export default class ApiMain extends Component {
                   </View>
                   <View>
                     <View style={styles.lists}>
-                      <View style={styles.listItem}>
-                        <Text style={{fontSize:15 ,color:'#9e9e9e'}}>공고번호</Text>
-                        <Text>{this.state.bidNum}</Text>
-                        <ListView
-                          dataSource={this.state.numRow}
-                          renderRow={(rowData) => <Text>{rowData}</Text>}/>
-                      </View>
-                      <View style={styles.listItem}>
-                        <Text style={{fontSize:15 ,color:'#9e9e9e'}}>공고이름</Text>
-                        <Text>{this.state.bidName}</Text>
-                        <ListView
-                          dataSource={this.state.nameRow}
-                          renderRow={(rowData) => <Text>{rowData}</Text>}/>
-                      </View>
-                      <View style={styles.listItem}>
-                        <Text style={{fontSize:15 ,color:'#9e9e9e'}}>공고일자</Text>
-                        <Text>{this.state.bidDate}</Text>
-                        <ListView
-                          dataSource={this.state.dateRow}
-                          renderRow={(rowData) => <Text>{rowData}</Text>}/>
-                      </View>
-                      <View style={styles.listItem}>
-                        <Text style={{fontSize:15 ,color:'#9e9e9e'}}>URL</Text>
-                        <Text>{this.state.bidUrl}</Text>
-                        <ListView
-                          dataSource={this.state.urlRow}
-                          renderRow={(rowData) => <Text>{rowData}</Text>}/>
-                      </View>
-                      <View style={styles.listItem}>
-                        <Text style={{fontSize:15 ,color:'#9e9e9e'}}>메모</Text>
-                        <Text>{this.state.bidMemo}</Text>
-                        <ListView
-                          dataSource={this.state.memoRow}
-                          renderRow={(rowData) => <Text>{rowData}</Text>}/>
-                      </View>
+
+
                     </View>
                   </View>
                   </ScrollView>
@@ -380,5 +360,10 @@ const styles = StyleSheet.create({
   listItem:{
     margin: 7,
     alignItems:'center'
+  },
+  separator:{
+    flex:1,
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: '#8E8E8E'
   }
 });

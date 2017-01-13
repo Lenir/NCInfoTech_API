@@ -18,6 +18,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 //Component, Containers
 import ApiMain from './apiMain'
 import DetailInfo from './detailInfo'
+import FetchedList from './fetchedList'
 
 //Reducer
 /*
@@ -44,6 +45,7 @@ export default class App extends Component {
           <Scene key="root"  hideNavBar hideTabBar>
             <Scene key="apiMain" component={ApiMain} initial animation="fade" />
             <Scene key="detailInfo" component={DetailInfo} />
+            <Scene key="fetchedList" component={FetchedList}/>
           </Scene>
         </Router>
     );
