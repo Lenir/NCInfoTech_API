@@ -31,10 +31,19 @@ import {
 import FetchConstants from "./FetchConstants"
 import Ionicons from 'react-native-vector-icons/Ionicons';
 // import FCM from 'react-native-fcm';
+var serializeJSON = function(data){
+  return Object.keys(data).map(function (keyName){
+    return encodeURIComponent(keyName)+'='+encodeURIComponent(data[keyName])
+  }).join('&');
+}
+
+
+
 
 export default class ApiMain extends Component {
   _timer: Timer;
   constructor(props) {
+
        super(props);
        const numR = new ListView.DataSource({rowHasChanged: (r1,r2) => r1 !== r2});
        const nameR = new ListView.DataSource({rowHasChanged: (r1,r2) => r1 !== r2});
@@ -52,7 +61,7 @@ export default class ApiMain extends Component {
          tmpMemo:'',
          //Search variable
          schBidNum: "",
-         schBidName: "" ,
+         schBidName: "동래구" ,
          schBidSDate: "2014-01-01",
          schBidEDate: "2017-01-01",
 
@@ -163,13 +172,30 @@ export default class ApiMain extends Component {
   }
 
   fetchBid(){
+    var params = {
+        schAnnnum: this.state.schBidNum,
+        schAnnname: this.state.schBidName,
+        schSdate: this.state.schBidSDate,
+        schEdate: this.state.schBidEDate
+    };
+    var formData = new FormData();
+    for (var k in params) {
+        formData.append(k, params[k]);
+    }
     this.setState({loading: true});
     fetch(FetchConstants.ListURL+
       "?schAnnnum="+this.state.schBidNum+
       "&schSdate="+this.state.schBidSDate+
       "&schEdate="+this.state.schBidEDate+
       "&schAnnname="+this.state.schBidName,{
-        method:'GET',
+        method:'POST',
+        credentials: 'same-origin',
+        mode: 'same-origin',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+        },
+        body: formData
       })
       .then((response) => response.json())
       .then((responseData) => {
@@ -260,6 +286,7 @@ export default class ApiMain extends Component {
                       color:'#7e7e7e',
                       alignItems:'center'
                       }}
+                      keyboardType='phone-pad'
                       placeholder="공고 번호를 입력해 주세요."
                       onChangeText={(schBidNum) => {
                         this.setState({schBidNum}) }}
@@ -272,6 +299,7 @@ export default class ApiMain extends Component {
                         color:'#7e7e7e',
                         alignItems:'center'
                         }}
+                        keyboardType='default'
                         placeholder="공고 이름을 입력해 주세요."
                         onChangeText={(schBidName) => {
                           this.setState({schBidName}) }}
