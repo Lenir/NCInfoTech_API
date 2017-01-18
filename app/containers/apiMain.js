@@ -183,17 +183,13 @@ export default class ApiMain extends Component {
         formData.append(k, params[k]);
     }
     this.setState({loading: true});
-    fetch(FetchConstants.ListURL+
-      "?schAnnnum="+this.state.schBidNum+
-      "&schSdate="+this.state.schBidSDate+
-      "&schEdate="+this.state.schBidEDate+
-      "&schAnnname="+this.state.schBidName,{
+    fetch(FetchConstants.ListURL,{
         method:'POST',
         credentials: 'same-origin',
         mode: 'same-origin',
         headers: {
           'Accept': 'application/json',
-          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+          'Content-Type': 'multipart/formdata; charset=UTF-8'
         },
         body: formData
       })
