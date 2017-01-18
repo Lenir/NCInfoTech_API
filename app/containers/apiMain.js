@@ -61,7 +61,7 @@ export default class ApiMain extends Component {
          tmpMemo:'',
          //Search variable
          schBidNum: "",
-         schBidName: "동래구" ,
+         schBidName: "" ,
          schBidSDate: "2014-01-01",
          schBidEDate: "2017-01-01",
 

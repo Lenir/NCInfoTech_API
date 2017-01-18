@@ -19,6 +19,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import ApiMain from './apiMain'
 import DetailInfo from './detailInfo'
 import FetchedList from './fetchedList'
+import ScoreInfo from './scoreInfo'
 
 //Reducer
 /*
@@ -46,6 +47,7 @@ export default class App extends Component {
             <Scene key="apiMain" component={ApiMain} initial animation="fade" />
             <Scene key="detailInfo" component={DetailInfo} />
             <Scene key="fetchedList" component={FetchedList}/>
+            <Scene key="scoreInfo" component={ScoreInfo} />
           </Scene>
         </Router>
     );
