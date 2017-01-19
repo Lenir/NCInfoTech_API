@@ -10,27 +10,12 @@ import {
   ActionConst
 } from 'react-native-router-flux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-// import FCM from 'react-native-fcm';
-
-
-
 
 //Component, Containers
 import ApiMain from './apiMain'
 import DetailInfo from './detailInfo'
 import FetchedList from './fetchedList'
 import ScoreInfo from './scoreInfo'
-
-//Reducer
-/*
-const reducerCreate = params => {
-  const defaultReducer = new Reducer(params);
-  return (state, action) => {
-    console.log('ACTION:', action);
-    return defaultReducer(state, action);
-  };
-};
-*/
 
 //Main class.
 export default class App extends Component {
@@ -45,9 +30,9 @@ export default class App extends Component {
         <Router >
           <Scene key="root"  hideNavBar hideTabBar>
             <Scene key="apiMain" component={ApiMain} initial animation="fade" />
-            <Scene key="detailInfo" component={DetailInfo} />
-            <Scene key="fetchedList" component={FetchedList}/>
-            <Scene key="scoreInfo" component={ScoreInfo} />
+            <Scene key="fetchedList" component={FetchedList} animation="fade" />
+            <Scene key="detailInfo" component={DetailInfo}  animation="fade"/>
+            <Scene key="scoreInfo" component={ScoreInfo} animation="fade"/>
           </Scene>
         </Router>
     );

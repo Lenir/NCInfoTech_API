@@ -8,6 +8,7 @@ import {
 } from 'react-native-router-flux';
 
 import {
+  ActivityIndicator,
   AppRegistry,
   Animated,
   Alert,
@@ -42,7 +43,8 @@ export default class FetchedList extends Component {
   constructor(props){
     super(props);
     this.state = {
-      dataSource : new ListView.DataSource({
+        annname : '',
+        dataSource : new ListView.DataSource({
         rowHasChanged: (row1, row2) => row1 !== row2,
       }),
       loading : true
@@ -51,12 +53,15 @@ export default class FetchedList extends Component {
   componentDidMount() {
     this.setToggleTimeout();
   }
+  componentWillUnmount() {
+    clearTimeout(this._timer);
+  }
   setToggleTimeout() {
     this._timer = setTimeout(() => {
     this.setState({loading: false});
-    }, 1);
+  }, 20);
   }
-  fetchDetail(anncd){
+  _fetch(anncd){
     this.setState({loading:true});
     fetch(FetchConstants.DetailURL+"?anncd="+ancd)
       .then((response) => response.json())
@@ -70,11 +75,13 @@ export default class FetchedList extends Component {
             ]
           )
           this.setState({loading: false});
+          return;
         }else{
           this.setState({
             loading: false
           });
           Actions.detailInfo({
+            annname : this.state.annname,
             FetchedData: responseData
           })
         }
@@ -97,19 +104,27 @@ export default class FetchedList extends Component {
                   {text:'확인'},
                 ]
               )
+              return;
             }else{
-            Actions.detailInfo({
-              annname : fetchedItem.annname,
-              FetchedData: responseData
-            })
+              this.setState({
+                loading: false,
+                annname: fetchedItem.annname
+              });
+              Actions.detailInfo({
+                annname : fetchedItem.annname,
+                memo : fetchedItem.memo,
+                FetchedData: responseData
+              })
           }
         }
       )
       .done()
+
+
        }}>
         <View style={{margin:5}}>
           <Text style={styles.items}>번호 : {fetchedItem.annnum}</Text>
-          <Text style={styles.items}>이름 : {fetchedItem.annname}</Text>
+          <Text style={styles.itemName}>이름 : {fetchedItem.annname}</Text>
           <Text style={styles.items}>메모 : {fetchedItem.memo}</Text>
         </View>
         <View style={styles.separator}/>
@@ -132,9 +147,16 @@ export default class FetchedList extends Component {
         <ScrollView>
           <ListView
             dataSource={this.state.dataSource}
-            renderRow={this.renderItems}
+            renderRow={this.renderItems.bind(this)}
+          />
+          <ActivityIndicator
+            animating={this.state.loading}
+            color="#aeaeae"
+            style={[{alignItems:'center'}, {height:30}]}
+            size="small"
           />
         </ScrollView>
+
             <TouchableOpacity onPress={()=>{
                 Actions.pop();
               } }>
@@ -183,5 +205,10 @@ const styles = StyleSheet.create({
   items:{
     color:'#606060',
     margin:2,
+  },
+  itemName:{
+    color:'#606060',
+    margin:2,
+    fontWeight:'bold'
   }
 });

@@ -170,7 +170,10 @@ export default class ApiMain extends Component {
       }]
     );
   }
-
+  validateDate(inputDate){
+    var val = /^[1-2][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]$/;
+    return val.test(inputDate);
+  }
   fetchBid(){
     var params = {
         schAnnnum: this.state.schBidNum,
@@ -178,6 +181,25 @@ export default class ApiMain extends Component {
         schSdate: this.state.schBidSDate,
         schEdate: this.state.schBidEDate
     };
+    if(!this.validateDate(this.state.schBidSDate)){
+        Alert.alert(
+        '오류',
+        '공고일을 (2000-01-01)형태로 입력해주십시오.',
+        [
+          {text:'확인'},
+        ]
+      )
+      return;
+    }else if(!this.validateDate(this.state.schBidEDate)){
+      Alert.alert(
+        '오류',
+        '개찰일을 (2000-01-01)형태로 입력해주십시오.',
+        [
+          {text:'확인'},
+        ]
+      )
+      return;
+    }
     var formData = new FormData();
     for (var k in params) {
         formData.append(k, params[k]);
@@ -270,10 +292,10 @@ export default class ApiMain extends Component {
                     fontWeight: 'bold',
                     color:'#8e8e8e',
                     marginTop: 100
-                  }}>NC Info Tech API
+                  }}>NCI Search
                   </Text>
                   <Text style={{color:'#9e9e9e'}}>
-                    Simple API Call Tutorial
+                    나라장터 검색 API
                   </Text>
                   <View style={{alignItems: 'center'}}>
                     <Text style={{fontSize:15 ,color:'#9e9e9e',marginTop: 30}}>공고 번호</Text>
@@ -289,40 +311,40 @@ export default class ApiMain extends Component {
                       value={this.state.schBidNum}/>
                   </View>
                   <View style={{alignItems: 'center'}}>
-                      <Text style={{fontSize:15 ,color:'#9e9e9e'}}>공고 이름</Text>
+                      <Text style={{fontSize:15 ,color:'#9e9e9e'}}>공고명</Text>
                       <TextInput style={{width:200,
                         height: 40,
                         color:'#7e7e7e',
                         alignItems:'center'
                         }}
                         keyboardType='default'
-                        placeholder="공고 이름을 입력해 주세요."
+                        placeholder="공고명을 입력해 주세요."
                         onChangeText={(schBidName) => {
                           this.setState({schBidName}) }}
                         value={this.state.schBidName}/>
                   </View>
 
                   <View style={{alignItems: 'center'}}>
-                      <Text style={{fontSize:15 ,color:'#9e9e9e'}}>공고 일자</Text>
+                      <Text style={{fontSize:15 ,color:'#9e9e9e'}}>공고일</Text>
                       <TextInput style={{width:110,
                         height: 40,
                         color:'#7e7e7e',
                         alignItems:'center'
                         }}
-                        placeholder="공고 시작 일자를 입력해 주세요."
+                        placeholder="공고일을 입력해 주세요."
                         onChangeText={(schBidSDate) => {
                           this.setState({schBidSDate}) }}
                         value={this.state.schBidSDate}/>
                   </View>
 
                   <View style={{alignItems: 'center'}}>
-                      <Text style={{fontSize:15 ,color:'#9e9e9e'}}>공고 일자</Text>
+                      <Text style={{fontSize:15 ,color:'#9e9e9e'}}>개찰일</Text>
                       <TextInput style={{width:110,
                         height: 40,
                         color:'#7e7e7e',
                         alignItems:'center'
                         }}
-                        placeholder="공고 종료 일자를 입력해 주세요."
+                        placeholder="개찰일을 입력해 주세요."
                         onChangeText={(schBidEDate) => {
                           this.setState({schBidEDate}) }}
                         value={this.state.schBidEDate}/>
